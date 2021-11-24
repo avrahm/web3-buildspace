@@ -3,6 +3,8 @@ node_modules
 coverage
 coverage.json
 typechain
+hardhat.config.js
+.DS_Store
 
 #Hardhat files
 cache
