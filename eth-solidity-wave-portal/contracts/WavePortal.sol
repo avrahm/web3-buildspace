@@ -24,7 +24,7 @@ contract WavePortal {
      */
     Wave[] waves;
 
-    constructor() {
+    constructor() payable {
         console.log("gm Buildspace.. Wave!");
     }
 
@@ -38,6 +38,21 @@ contract WavePortal {
 
         // emit the NewWave event
         emit NewWave(msg.sender, block.timestamp, _message);
+
+        uint256 prizeAmount = 0.0001 ether;
+
+        // require the prizeAmount to be sent to the sender
+        // require will throw an error if the condition is not met and the transaction will be reverted
+        require(
+            prizeAmount <= address(this).balance,
+            "Trying to withdraw more money than the contract has."
+        );
+
+        // send the prizeAmount to the sender
+        (bool success, ) = (msg.sender).call{value: prizeAmount}("");
+
+        // check if the transaction succeeded otherwise cancel the transaction
+        require(success, "Failed to withdraw money from contract.");
     }
 
     // get the msgs from the waves array

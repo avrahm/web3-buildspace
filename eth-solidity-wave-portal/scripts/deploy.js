@@ -7,7 +7,9 @@ const main = async () => {
 
     // calling the contact
     const Token = await hre.ethers.getContractFactory("WavePortal");
-    const portal = await Token.deploy();
+    const portal = await Token.deploy({
+        value: hre.ethers.utils.parseEther('0.001'),
+    });
     await portal.deployed();
 
     console.log(`Deployed WavePortal contract to: ${portal.address}`);

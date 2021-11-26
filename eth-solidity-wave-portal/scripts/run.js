@@ -4,25 +4,34 @@ const main = async () => {
 
     // create a new contract instance
     const waveContractFactory = await hre.ethers.getContractFactory("WavePortal");
-    const waveContract = await waveContractFactory.deploy();
+    const waveContract = await waveContractFactory.deploy({
+        value: hre.ethers.utils.parseEther('0.1'),
+    });
     waveContract.deployed();
 
+    /* get contact address */
     // logging the address of the contract and owner 
     console.log("Deployed WavePortal contract to: " + waveContract.address);
     console.log("Owner:", owner.address);
 
-    // waiting for the total waves from the contract and setting the value to the variable waveCount
+    /* Get Contract balance */
+    let contractBalance = await hre.ethers.provider.getBalance(waveContract.address);
+    console.log('Contract balance:', hre.ethers.utils.formatEther(contractBalance));
+
+    /* Get total wave */
+    // get the total waves from the contract and setting the value to the variable waveCount
     let waveCount;
     waveCount = await waveContract.getTotalWaves();
     console.log("Retrieved total gm count...", waveCount.toNumber());
 
+    /* send a wave */
     // execute a wave() transaction on the contract to test the messages
     let waveTxn = await waveContract.wave('This is your first message on Blockchain!');
     await waveTxn.wait(); // Wait for the transaction to be mined
 
-    //send another test message using a random address
-    waveTxn = await waveContract.connect(randomPerson).wave("What what! Let's GO!");
-    await waveTxn.wait(); // Wait for the transaction to be mined
+    /* Get Contract balance to see what happened!  */
+    contractBalance = await hre.ethers.provider.getBalance(waveContract.address);
+    console.log('Contract balance:', hre.ethers.utils.formatEther(contractBalance));
 
     // log the messages from the contract
     let allWaveMsgs = await waveContract.getAllWaveMsgs();
