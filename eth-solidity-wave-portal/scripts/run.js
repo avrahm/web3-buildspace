@@ -14,20 +14,19 @@ const main = async () => {
     // waiting for the total waves from the contract and setting the value to the variable waveCount
     let waveCount;
     waveCount = await waveContract.getTotalWaves();
+    console.log("Retrieved total gm count...", waveCount.toNumber());
 
-    // calling the function wave() and storing the result
-    let waveTxn = await waveContract.wave();
-    await waveTxn.wait();
+    // execute a wave() transaction on the contract to test the messages
+    let waveTxn = await waveContract.wave('This is your first message on Blockchain!');
+    await waveTxn.wait(); // Wait for the transaction to be mined
 
-    // logging the new value of the variable waveCount
-    waveCount = await waveContract.getTotalWaves();
+    //send another test message using a random address
+    waveTxn = await waveContract.connect(randomPerson).wave("What what! Let's GO!");
+    await waveTxn.wait(); // Wait for the transaction to be mined
 
-    // caling the function wave() again and storing the result
-    waveTxn = await waveContract.connect(randomPerson).wave();
-    await waveTxn.wait();
-
-    // logging the new value of the variable waveCount
-    waveCount = await waveContract.getTotalWaves()
+    // log the messages from the contract
+    let allWaveMsgs = await waveContract.getAllWaveMsgs();
+    console.log(allWaveMsgs);
 };
 
 const runMain = async () => {
