@@ -34,8 +34,6 @@ contract WavePortal {
     mapping(address => uint256) public lastWavedAt;
 
     constructor() payable {
-        console.log("gm Buildspace.. Contructed!");
-
         //seed is a random number used to determine if someone wins the prizeAmount
         seed = (block.timestamp + block.difficulty) % 100;
     }
@@ -43,11 +41,11 @@ contract WavePortal {
     // This is the function that will be called when someone sends a wave msg in the portal.
     function wave(string memory _message) public {
         /*
-         * We need to make sure the current timestamp is at least 15-minutes bigger than the last timestamp we stored
+         * We need to make sure the current timestamp is at least 30 seconds after the last timestamp we stored
          */
         require(
-            lastWavedAt[msg.sender] + 15 minutes < block.timestamp,
-            "Please wait at least 15m"
+            lastWavedAt[msg.sender] + 30 seconds < block.timestamp,
+            "Please wait at least 30s"
         );
 
         /*
@@ -56,7 +54,6 @@ contract WavePortal {
         lastWavedAt[msg.sender] = block.timestamp;
 
         totalWaves++;
-        // console.log("%s, gm Wave!", msg.sender);
 
         // push a new Wave struct to the waves array
         waves.push(Wave(msg.sender, _message, block.timestamp));
@@ -64,11 +61,10 @@ contract WavePortal {
         // generate a new seed for the next person who sends a way
         seed = (block.difficulty + block.timestamp + seed) % 100;
 
-        console.log("%s seed", seed);
-
-        if (seed <= 50) {
-            console.log("%s won!", msg.sender);
+        if (seed <= 30) {
             uint256 prizeAmount = 0.00001 ether;
+
+            require(seed <= 30, "You won some ETH!");
 
             // require the prizeAmount to be sent to the sender
             // require will throw an error if the condition is not met and the transaction will be reverted
@@ -94,7 +90,6 @@ contract WavePortal {
 
     // get the total number of waves
     function getTotalWaves() public view returns (uint256) {
-        console.log("We have %d total gm's!", totalWaves);
         return totalWaves;
     }
 }
