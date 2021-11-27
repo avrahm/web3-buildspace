@@ -26,7 +26,7 @@ const main = async () => {
 
     /* send a wave */
     // execute a wave() transaction on the contract to test the messages
-    let waveTxn = await waveContract.wave('This is your first message on Blockchain!');
+    const waveTxn = await waveContract.wave('test 1');
     await waveTxn.wait(); // Wait for the transaction to be mined
 
     /* Get Contract balance to see what happened!  */

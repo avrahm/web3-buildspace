@@ -8,7 +8,7 @@ const main = async () => {
     // calling the contact
     const Token = await hre.ethers.getContractFactory("WavePortal");
     const portal = await Token.deploy({
-        value: hre.ethers.utils.parseEther('0.001'),
+        value: hre.ethers.utils.parseEther('0.3'),
     });
     await portal.deployed();
 

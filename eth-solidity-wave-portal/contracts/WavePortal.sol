@@ -5,7 +5,11 @@ pragma solidity ^0.8.0;
 import "hardhat/console.sol";
 
 contract WavePortal {
+    //public integer totalWaves
     uint256 public totalWaves;
+
+    // private int seed;
+    uint256 private seed;
 
     // events for the portal ... need to review
     event NewWave(address indexed from, uint256 timestamp, string message);
@@ -24,35 +28,63 @@ contract WavePortal {
      */
     Wave[] waves;
 
+    /* mapping
+     * https://medium.com/upstate-interactive/mappings-in-solidity-explained-in-under-two-minutes-ecba88aff96e
+     */
+    mapping(address => uint256) public lastWavedAt;
+
     constructor() payable {
-        console.log("gm Buildspace.. Wave!");
+        console.log("gm Buildspace.. Contructed!");
+
+        //seed is a random number used to determine if someone wins the prizeAmount
+        seed = (block.timestamp + block.difficulty) % 100;
     }
 
     // This is the function that will be called when someone sends a wave msg in the portal.
     function wave(string memory _message) public {
+        /*
+         * We need to make sure the current timestamp is at least 15-minutes bigger than the last timestamp we stored
+         */
+        require(
+            lastWavedAt[msg.sender] + 15 minutes < block.timestamp,
+            "Please wait at least 15m"
+        );
+
+        /*
+         * Update the current timestamp we have for the user
+         */
+        lastWavedAt[msg.sender] = block.timestamp;
+
         totalWaves++;
-        console.log("%s, gm Wave!", msg.sender);
+        // console.log("%s, gm Wave!", msg.sender);
 
         // push a new Wave struct to the waves array
         waves.push(Wave(msg.sender, _message, block.timestamp));
 
+        // generate a new seed for the next person who sends a way
+        seed = (block.difficulty + block.timestamp + seed) % 100;
+
+        console.log("%s seed", seed);
+
+        if (seed <= 50) {
+            console.log("%s won!", msg.sender);
+            uint256 prizeAmount = 0.00001 ether;
+
+            // require the prizeAmount to be sent to the sender
+            // require will throw an error if the condition is not met and the transaction will be reverted
+            require(
+                prizeAmount <= address(this).balance,
+                "Trying to withdraw more money than the contract has."
+            );
+
+            // send the prizeAmount to the sender
+            (bool success, ) = (msg.sender).call{value: prizeAmount}("");
+
+            // check if the transaction succeeded otherwise cancel the transaction
+            require(success, "Failed to withdraw money from contract.");
+        }
         // emit the NewWave event
         emit NewWave(msg.sender, block.timestamp, _message);
-
-        uint256 prizeAmount = 0.0001 ether;
-
-        // require the prizeAmount to be sent to the sender
-        // require will throw an error if the condition is not met and the transaction will be reverted
-        require(
-            prizeAmount <= address(this).balance,
-            "Trying to withdraw more money than the contract has."
-        );
-
-        // send the prizeAmount to the sender
-        (bool success, ) = (msg.sender).call{value: prizeAmount}("");
-
-        // check if the transaction succeeded otherwise cancel the transaction
-        require(success, "Failed to withdraw money from contract.");
     }
 
     // get the msgs from the waves array
