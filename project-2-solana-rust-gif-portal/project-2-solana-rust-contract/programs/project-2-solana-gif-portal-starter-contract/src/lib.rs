@@ -1,4 +1,4 @@
-// use is the equivalent to the import statement 
+// use is the equivalent to the import statement
 use anchor_lang::prelude::*;
 
 // the id of the program and tells solana how to run the program
@@ -15,10 +15,32 @@ pub mod project_2_solana_gif_portal_starter_contract {
     // start_stuff_off takes some Context and outputs a ProgramResult
     // OK(()) is a ProgramResult that is a success https://doc.rust-lang.org/std/result/
     pub fn start_stuff_off(ctx: Context<StartStuffOff>) -> ProgramResult {
+        // reference to the account. We use &mut to get a "mutable reference" to base_account. Allows us to modify the account
+        let base_account = &mut ctx.accounts.base_account;
+        base_account.total_gifs = 0;
         Ok(())
     }
 }
 
 // another macro
+// Attach certain variables to the StartStuffOff context.
 #[derive(Accounts)]
-pub struct StartStuffOff {}
+pub struct StartStuffOff<'info> {
+    // initializes the BaseAccount data
+    // https://docs.solana.com/developing/programming-model/accounts#rent
+    #[account(init, payer = user, space = 9000)]
+    pub base_account: Account<'info, BaseAccount>, // base_account is a reference to the BaseAccount
+
+    #[account(mut)]
+    pub user: Signer<'info>, // data passed into the program that proves to the program that the user calling this program actually owns their wallet account.
+
+    pub system_program: Program<'info, System>, //  It is a program that is run by the system. SystemProgram is the program that basically runs Solana.
+                                                // https://docs.solana.com/developing/runtime-facilities/programs#system-program
+}
+
+// Tell Solana what we want to store on this account. Data is stored in accounts not on the contract
+// https://docs.solana.com/developing/programming-model/accounts
+#[account]
+pub struct BaseAccount {
+    pub total_gifs: u64,
+}
