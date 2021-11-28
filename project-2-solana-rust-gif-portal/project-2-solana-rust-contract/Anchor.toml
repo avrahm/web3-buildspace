@@ -1,0 +1,12 @@
+[programs.localnet]
+project_2_solana_gif_portal_starter_contract = "Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS"
+
+[registry]
+url = "https://anchor.projectserum.com"
+
+[provider]
+cluster = "localnet"
+wallet = "/Users/Avrahm/.config/solana/id.json"
+
+[scripts]
+test = "yarn run mocha -t 1000000 tests/"
