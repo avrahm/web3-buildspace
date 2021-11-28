@@ -21,10 +21,25 @@ pub mod project_2_solana_gif_portal_starter_contract {
         Ok(())
     }
 
-    // Add gif Function
-    pub fn add_gif(ctx: Context<AddGif>) -> ProgramResult {
+    // add_gif Function.. Context is set to Context<AddGif>
+    // add_gif also allows to accept the gif_link as an argument
+    pub fn add_gif(ctx: Context<AddGif>, gif_link: String) -> ProgramResult {
         // Get a reference to the account and increment total_gifs.
         let base_account = &mut ctx.accounts.base_account;
+
+        // reference to the user account.
+        let user = &mut ctx.accounts.user;
+
+        // item is a struct that contains the gif_link and the user_address
+        let item = ItemStruct {
+            gif_link: gif_link.to_string(),
+            user_address: *user.to_account_info().key,
+        };
+
+        // Add the item to the list of gifs
+        base_account.gif_list.push(item);
+
+        // Increment total_gifs
         base_account.total_gifs += 1;
         Ok(())
     }
@@ -52,11 +67,29 @@ pub struct AddGif<'info> {
     // account(mut) is a reference to the BaseAccount and allows to change the total_gifs value
     #[account(mut)]
     pub base_account: Account<'info, BaseAccount>,
+
+    // we add the signer who calls the AddGif method to the struct to save it in the AddGif context
+    #[account(mut)]
+    pub user: Signer<'info>,
+}
+
+// declaring a new struct called ItemStruct
+#[derive(Debug, Clone, AnchorSerialize, AnchorDeserialize)] // https://docs.rs/anchor-lang/0.4.0/anchor_lang/trait.AnchorSerialize.html
+pub struct ItemStruct {
+    pub gif_link: String,
+    pub user_address: Pubkey,
 }
 
 // Tell Solana what we want to store on this account. Data is stored in accounts not on the contract
 // https://docs.solana.com/developing/programming-model/accounts
 #[account]
 pub struct BaseAccount {
+    // total_gifs is the number of gifs in the gif_list
+    // u64 is a 64 bit unsigned integer
     pub total_gifs: u64,
+
+    //gif_list is a new parameter
+    // vec is a vector of ItemStruct
+    // https://doc.rust-lang.org/std/vec/struct.Vec.html
+    pub gif_list: Vec<ItemStruct>,
 }
