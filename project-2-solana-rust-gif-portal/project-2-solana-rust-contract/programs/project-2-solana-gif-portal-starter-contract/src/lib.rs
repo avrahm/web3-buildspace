@@ -20,9 +20,17 @@ pub mod project_2_solana_gif_portal_starter_contract {
         base_account.total_gifs = 0;
         Ok(())
     }
+
+    // Add gif Function
+    pub fn add_gif(ctx: Context<AddGif>) -> ProgramResult {
+        // Get a reference to the account and increment total_gifs.
+        let base_account = &mut ctx.accounts.base_account;
+        base_account.total_gifs += 1;
+        Ok(())
+    }
 }
 
-// another macro
+// another macro which acts like a class, interface, or an object
 // Attach certain variables to the StartStuffOff context.
 #[derive(Accounts)]
 pub struct StartStuffOff<'info> {
@@ -36,6 +44,14 @@ pub struct StartStuffOff<'info> {
 
     pub system_program: Program<'info, System>, //  It is a program that is run by the system. SystemProgram is the program that basically runs Solana.
                                                 // https://docs.solana.com/developing/runtime-facilities/programs#system-program
+}
+
+// Specify what data you want in the AddGif Context.
+#[derive(Accounts)]
+pub struct AddGif<'info> {
+    // account(mut) is a reference to the BaseAccount and allows to change the total_gifs value
+    #[account(mut)]
+    pub base_account: Account<'info, BaseAccount>,
 }
 
 // Tell Solana what we want to store on this account. Data is stored in accounts not on the contract
