@@ -9,4 +9,4 @@ cluster = "localnet"
 wallet = "/Users/Avrahm/.config/solana/id.json"
 
 [scripts]
-test = "yarn run mocha -t 1000000 tests/"
+test = "node tests/project-2-solana-gif-portal-starter-contract.js"
