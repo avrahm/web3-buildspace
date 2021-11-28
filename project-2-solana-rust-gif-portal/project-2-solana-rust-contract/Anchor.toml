@@ -1,11 +1,11 @@
-[programs.localnet]
-project_2_solana_gif_portal_starter_contract = "Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS"
+[programs.devnet]
+project_2_solana_gif_portal_starter_contract = "E1sKKb4RBperWd4uT1o7mXxRovGfmauytybquhsnwY7r"
 
 [registry]
 url = "https://anchor.projectserum.com"
 
 [provider]
-cluster = "localnet"
+cluster = "devnet"
 wallet = "/Users/Avrahm/.config/solana/id.json"
 
 [scripts]

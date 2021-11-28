@@ -2,7 +2,9 @@
 use anchor_lang::prelude::*;
 
 // the id of the program and tells solana how to run the program
-declare_id!("Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS");
+// the id is a hash of the program source code
+// update the id from the placeholder initially created with anchor init
+declare_id!("E1sKKb4RBperWd4uT1o7mXxRovGfmauytybquhsnwY7r");
 
 // #[] is a macro http://web.mit.edu/rust-lang_v1.25/arch/amd64_ubuntu1404/share/doc/rust/html/book/first-edition/macros.html
 // They allows us to define a function that takes no arguments and returns nothing
