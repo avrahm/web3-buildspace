@@ -45,6 +45,13 @@ pub mod project_2_solana_gif_portal_starter_contract {
         base_account.total_gifs += 1;
         Ok(())
     }
+
+    pub fn clear_gifs(ctx: Context<ClearGifs>) -> ProgramResult {
+        let base_account = &mut ctx.accounts.base_account;
+        base_account.gif_list.clear();
+        base_account.total_gifs = 0;
+        Ok(())
+    }
 }
 
 // another macro which acts like a class, interface, or an object
@@ -71,6 +78,16 @@ pub struct AddGif<'info> {
     pub base_account: Account<'info, BaseAccount>,
 
     // we add the signer who calls the AddGif method to the struct to save it in the AddGif context
+    #[account(mut)]
+    pub user: Signer<'info>,
+}
+
+// clear_gifs is a struct that contains the BaseAccount and the user
+#[derive(Accounts)]
+pub struct ClearGifs<'info> {
+    #[account(mut)]
+    pub base_account: Account<'info, BaseAccount>,
+
     #[account(mut)]
     pub user: Signer<'info>,
 }
