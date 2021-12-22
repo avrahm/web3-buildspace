@@ -17,3 +17,8 @@
 - [View Program account on Solscan](https://explorer.solana.com/address/E1sKKb4RBperWd4uT1o7mXxRovGfmauytybquhsnwY7r?cluster=devnet)
 
 ## Project 3 - NFT Solana and Metaplex
+- Check out the live project - [https://avrahm-buildspace-solana-metaplex.netlify.app]
+  - Connect your Phantom wallet  
+  - Change to the Solana Devnet
+- [View the frontend code](https://github.com/avrahm/project-3-solana-metaplex-nft-drop)
+
